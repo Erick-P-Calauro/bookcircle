@@ -34,11 +34,41 @@ UsuarioController.post("/usuario/save", async (req, res) => {
     }catch(e: any) {
         
         if(e.code == '23505') {
-            res.send("Já existe usuário com este nome/email");
+            res.send("Já existe usuário com este nome/email").status(400);
         }
 
         res.sendStatus(400);
     }
 
     res.sendStatus(201);
+})
+
+UsuarioController.put("/usuario/edit/:id", async (req, res) => {
+    const { id } = req.params;
+    const newUser : Usuario = req.body;
+
+    try{
+        await db.query(`UPDATE usuario SET nome = '${newUser.nome}', email = '${newUser.email}', senha = '${newUser.senha}' WHERE uid = ${id}`);
+    }catch(e: any) {
+
+        if(e.code == '23505') {
+            res.send("Já existe usuário com este nome/email").status(400);
+        }
+
+        res.sendStatus(400);
+    }
+
+    res.sendStatus(201);
+})
+
+UsuarioController.delete("/usuario/delete/:id", async (req, res) => {
+    const { id } = req.params;
+    
+    try {
+        await db.query(`DELETE FROM usuario WHERE uid = ${id}`)
+    }catch(e: any) {
+        res.sendStatus(400);
+    }
+
+    res.sendStatus(200);
 })
