@@ -1,36 +1,36 @@
 import { Router } from "express";
-import { db } from "../configuration/DatabaseConfiguration";
-import { Usuario } from "../models/Usuario";
+import { UsuarioCreate, UsuarioResponse } from "../models/Usuario";
+import { UsuarioRepository } from "../repositories/UsuarioRepository";
 export const UsuarioController = Router();
 
 UsuarioController.get("/usuario", async (req, res) => {
-    const users : Usuario[] = (await db.query("SELECT * FROM usuario")).rows;
-    res.json(users);
+    const users : UsuarioResponse[] = await UsuarioRepository.list();
+    res.status(200).json(users);
 })
 
 UsuarioController.get("/usuario/:id", async (req, res) => {
-    
     const { id } = req.params;
-
-    let response = await db.query("SELECT * FROM usuario WHERE uid = "+id);
+    let response = await UsuarioRepository.get(id);
     
-    if(response.rowCount == 0) {
-        res.sendStatus(404) // Usuario não encontrado.
+    if(response == undefined) {
+        res.status(404).send("Usuário não encontrado.") // Usuario não encontrado.
     }
 
-    const user : Usuario = response.rows[0];
-    res.json(user);
+    res.status(200).json(response);
 })
 
 UsuarioController.post("/usuario/save", async (req, res) => {
     const { nome, email, senha } = req.body
+    const newUser: UsuarioCreate = {
+        nome, email, senha
+    }
 
     if(nome == undefined || email == undefined || senha == undefined) {
         res.sendStatus(400);
     }
 
     try{
-        await db.query(`INSERT INTO usuario(nome, email, senha) VALUES('${nome}', '${email}', '${senha}')`);
+        UsuarioRepository.save(newUser);
     }catch(e: any) {
         
         if(e.code == '23505') {
@@ -45,10 +45,10 @@ UsuarioController.post("/usuario/save", async (req, res) => {
 
 UsuarioController.put("/usuario/edit/:id", async (req, res) => {
     const { id } = req.params;
-    const newUser : Usuario = req.body;
+    const newUser : UsuarioCreate = req.body;
 
     try{
-        await db.query(`UPDATE usuario SET nome = '${newUser.nome}', email = '${newUser.email}', senha = '${newUser.senha}' WHERE uid = ${id}`);
+        UsuarioRepository.edit(id, newUser);
     }catch(e: any) {
 
         if(e.code == '23505') {
@@ -61,11 +61,11 @@ UsuarioController.put("/usuario/edit/:id", async (req, res) => {
     res.sendStatus(201);
 })
 
-UsuarioController.delete("/usuario/delete/:id", async (req, res) => {
+UsuarioController.delete("/usuario/delete/:id", (req, res) => {
     const { id } = req.params;
     
     try {
-        await db.query(`DELETE FROM usuario WHERE uid = ${id}`)
+        UsuarioRepository.delete(id);
     }catch(e: any) {
         res.sendStatus(400);
     }
