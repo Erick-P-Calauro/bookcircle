@@ -34,7 +34,7 @@ UsuarioController.post("/usuario/save", async (req, res) => {
     }catch(e: any) {
         
         if(e.code == '23505') {
-            res.send("Já existe usuário com este nome/email").status(400);
+            res.status(400).send("Já existe usuário com este nome/email");
         }
 
         res.sendStatus(400);
@@ -52,7 +52,7 @@ UsuarioController.put("/usuario/edit/:id", async (req, res) => {
     }catch(e: any) {
 
         if(e.code == '23505') {
-            res.send("Já existe usuário com este nome/email").status(400);
+            res.status(400).send("Já existe usuário com este nome/email");
         }
 
         res.sendStatus(400);

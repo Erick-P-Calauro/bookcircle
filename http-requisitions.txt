@@ -1,0 +1,7 @@
+curl http://localhost:8080/usuario
+curl http://localhost:8080/usuario/1
+curl -X POST -d nome=Erick -d email=erickcalauro@gmail.com -d senha=123456 http://localhost:8080/usuario/save
+curl -X PUT -d nome=Erickao -d email=erickcalauro@gmail.com -d senha=123456 http://localhost:8080/usuario/edit/1
+curl -X DELETE http://localhost:8080/usuario/delete/1
+
+curl http://localhost:8080/livro
