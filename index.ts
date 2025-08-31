@@ -1,3 +1,4 @@
+import { initDb } from "./configuration/DatabaseConfiguration";
 import { routes } from "./routes";
 import { config } from "dotenv"
 
@@ -6,6 +7,8 @@ const app = express();
 config()
 
 const PORT = process.env.APP_PORT;
+
+initDb();
 
 app.use(routes);
 
