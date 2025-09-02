@@ -1,5 +1,5 @@
 export type Livro = {
-    id: number,
+    uid: number,
     titulo: string,
     autor: string,
 }
@@ -12,7 +12,7 @@ export type LivroCreate = {
 }
 
 export type LivroResponse = {
-    id: number,
+    uid: number,
     titulo: string,
     autor: string,
 }

@@ -1,24 +1,25 @@
 import { db } from "../configuration/DatabaseConfiguration"
-import { UsuarioCreate, UsuarioResponse } from "../models/Usuario"
+import { Usuario, UsuarioCreate } from "../models/Usuario"
 
 export const UsuarioRepository : {
 
-    list: () => Promise<UsuarioResponse[]>,
-    get: (id: number) => Promise<UsuarioResponse | undefined>,
+    list: () => Promise<Usuario[]>,
+    get: (id: number) => Promise<Usuario | undefined>,
     save: (usuario : UsuarioCreate) => void
     edit: (id: number, usuario: UsuarioCreate) => void,
-    delete : (id: number) => void
+    delete: (id: number) => void
+    userExists: (userId: number) => Promise<boolean>
 
 } = {
 
     list: async () => {
         const response = await db.query("SELECT * FROM usuario");
-        const users : UsuarioResponse[] = response.rows;
+        const users : Usuario[] = response.rows;
 
         return users; 
     },
 
-    get: async (id: number) => {
+    get: async (id: number) : Promise<Usuario | undefined> => {
         const response  = await db.query(`SELECT * FROM usuario WHERE uid = ${id}`);
 
         if(response.rowCount == 0) {
@@ -38,6 +39,16 @@ export const UsuarioRepository : {
 
     delete: async (id: number) => {
         await db.query(`DELETE FROM usuario WHERE uid = ${id}`)
-    }
+    },
+
+    userExists: async (id: number) => {
+        const response = await db.query(`SELECT * FROM usuario WHERE uid = ${id}`)
+
+        if(response.rowCount == 0) {
+            return false;
+        }
+
+        return true;
+    },
 
 }

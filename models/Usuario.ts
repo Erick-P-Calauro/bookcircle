@@ -1,14 +1,11 @@
-import { Livro } from "./Livro"
+import { Livro, LivroResponse } from "./Livro"
 
 export type Usuario = {
-    id: number,
+    uid: number,
     nome: string,
     email: string,
     senha : string,
-    livros_favoritos : Livro[]
 }
-
-// DTOs
 
 export type UsuarioCreate = {
     nome: string,
@@ -17,8 +14,9 @@ export type UsuarioCreate = {
 }
 
 export type UsuarioResponse = {
-    id: number,
+    uid: number,
     nome: string,
     email: string,
     senha : string,
+    livros_favoritos: LivroResponse[]
 }

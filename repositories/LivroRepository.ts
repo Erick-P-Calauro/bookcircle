@@ -1,18 +1,19 @@
 import { db } from "../configuration/DatabaseConfiguration";
-import { LivroCreate, LivroResponse } from "../models/Livro"
+import { LivroCreate, Livro } from "../models/Livro"
 
 export const LivroRepository : {
 
-    list: () => Promise<LivroResponse[]>,
-    get: (id: number) => Promise<LivroResponse | undefined>,
+    list: () => Promise<Livro[]>,
+    get: (id: number) => Promise<Livro | undefined>,
     save: (livro: LivroCreate) => void,
     edit: (id: number, livro: LivroCreate) => void,
     delete: (id: number) => void
+    bookExists: (id: number) => Promise<boolean>
 
 } = {
 
     list: async () => {
-        const response: LivroResponse[] = (await db.query(`SELECT * FROM livro`)).rows;
+        const response: Livro[] = (await db.query(`SELECT * FROM livro`)).rows;
 
         return response;
     },
@@ -37,6 +38,16 @@ export const LivroRepository : {
 
     delete: async(id: number) => {
         await db.query(`DELETE FROM livro WHERE uid = ${id}`)
+    },
+
+    bookExists: async (id: number) => {
+        const response = await db.query(`SELECT * FROM livro WHERE uid = ${id}`);
+
+        if(response.rowCount == 0) {
+            return false;
+        }
+
+        return true;
     }
 
 }

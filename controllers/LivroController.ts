@@ -12,7 +12,7 @@ LivroController.get("/livro", async (req, res) => {
 
 LivroController.get("/livro/:id", async (req, res) => {
     const { id } = req.params;
-    const response = await LivroRepository.get(id);
+    const response : LivroResponse | undefined = await LivroRepository.get(id);
 
     if(response == undefined) {
         res.status(404).send("Livro não encontrado.");
@@ -42,12 +42,12 @@ LivroController.post("/livro/save", async (req, res) => {
         res.sendStatus(400);
     }
 
-    res.sendStatus(401);
+    res.sendStatus(201);
 })
 
 LivroController.put("/livro/edit/:id", async (req, res) => {
     const { id } = req.params;
-    const newLivro = req.body;
+    const newLivro : LivroCreate = req.body;
 
     try {
         LivroRepository.edit(id, newLivro);

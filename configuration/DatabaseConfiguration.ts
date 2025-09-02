@@ -14,8 +14,8 @@ export const initDb = async () => {
     
     await db.query("CREATE TABLE IF NOT EXISTS livro(uid serial PRIMARY KEY NOT NULL, titulo varchar(255) NOT NULL UNIQUE, autor varchar(255) NOT NULL);");
     await db.query("CREATE TABLE IF NOT EXISTS usuario(uid serial PRIMARY KEY NOT NULL, nome varchar(255) NOT NULL UNIQUE, email varchar(255) NOT NULL UNIQUE, senha varchar(255) NOT NULL);");
-    await db.query("CREATE TABLE IF NOT EXISTS livro_usuario(uid serial PRIMARY KEY NOT NULL, usuario integer NOT NULL REFERENCES usuario(uid), livro integer NOT NULL REFERENCES livro(uid));")
+    await db.query("CREATE TABLE IF NOT EXISTS usuario_livro(uid serial PRIMARY KEY NOT NULL, usuario integer NOT NULL REFERENCES usuario(uid), livro integer NOT NULL REFERENCES livro(uid));")
     await db.query("CREATE TABLE IF NOT EXISTS grupo(uid serial PRIMARY KEY NOT NULL, nome varchar(255) NOT NULL, criador integer REFERENCES usuario(uid));")
-    await db.query("CREATE TABLE IF NOT EXISTS grupo_usuario(uid serial PRIMARY KEY NOT NULL, usuario integer REFERENCES usuario(uid), grupo integer REFERENCES grupo(uid));");
+    await db.query("CREATE TABLE IF NOT EXISTS usuario_grupo(uid serial PRIMARY KEY NOT NULL, usuario integer REFERENCES usuario(uid), grupo integer REFERENCES grupo(uid));");
 
 }
